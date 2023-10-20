@@ -1,25 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import schema from './schema';
+import prisma from '@/prisma/client';
 
 // to prevent caching have to add this request object
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
+  const users = await prisma.user.findMany();
   // In this function, receive a request and return a response
   // fetch users from a database
 
-  return NextResponse.json([
-    {
-      id: 1,
-      name: 'Kyle',
-    },
-    {
-      id: 2,
-      name: 'Bobby',
-    },
-    {
-      id: 3,
-      name: 'Ryan',
-    },
-  ]);
+  return NextResponse.json(users);
 }
 
 // POST requests, used for creating objects
@@ -34,6 +23,21 @@ export async function POST(request: NextRequest) {
   const validation = schema.safeParse(body);
   if (!validation.success)
     return NextResponse.json(validation.error.errors, { status: 400 });
+
+  const user = await prisma.user.findUnique({
+    where: { email: body.email },
+  });
+
+  if (user)
+    return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+
   // status 200 means OK, status 201 means Object was created
-  return NextResponse.json({ id: 1, name: body.name }, { status: 201 });
+  const newUser = await prisma.user.create({
+    data: {
+      name: body.name,
+      email: body.email,
+      // the other properties are not required because we gave them default values
+    },
+  });
+  return NextResponse.json(newUser, { status: 201 });
 }
