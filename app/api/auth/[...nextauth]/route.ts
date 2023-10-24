@@ -1,13 +1,40 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import prisma from '@/prisma/client';
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        // `credentials` is used to generate a form on the sign in page.
+        // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+        // e.g. domain, username, password, 2FA token, etc.
+        // You can pass any HTML attribute to the <input> tag through the object.
+        email: { label: 'Email', type: 'email', placeholder: 'Email' },
+        password: { label: 'Password', type: 'password', placeholder: 'Email' },
+      },
+      async authorize(credentials, req) {
+        if (!credentials?.email || !credentials.password) return null;
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) return null;
+      },
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  // session: {
+  //   strategy: 'jwt',
+  // },
 };
 
 // with process.env, can read our environment variables
