@@ -32,7 +32,7 @@ export async function PUT(
   });
 
   if (!product)
-    return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    return NextResponse.json({ error: 'Product not found' }, { status: 404 });
 
   const updateProduct = await prisma.product.update({
     where: { id: product.id },
