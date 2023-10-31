@@ -20,6 +20,6 @@ body {
 /* Overriding styles in the base layer */
 @layer base {
   h1 {
-    @apply font-extrabold text-2xl mb-3;
+    @apply font-extrabold text-2xl mb-3 font-poppins;
   }
 }
