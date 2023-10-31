@@ -20,11 +20,11 @@ datasource db {
 //   registeredAt DateTime @default(now())
 // }
 
-// model Product {
-//   id    Int    @id @default(autoincrement())
-//   name  String @unique
-//   price Float
-// }
+model Product {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  price Float
+}
 
 model Account {
   id                 String  @id @default(cuid())

@@ -27,8 +27,8 @@ const RegisterNewUser = () => {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     // setIsLoading(true);
 
     if (newUser.name)
@@ -71,10 +71,10 @@ const RegisterNewUser = () => {
           <div className="md:w-2/3">
             <input
               // ref={oldPasswordRef}
-              onChange={(e) =>
+              onChange={(event) =>
                 setNewUser({
                   ...newUser,
-                  name: e.target.value,
+                  name: event.currentTarget.value,
                 })
               }
               value={newUser.name}
@@ -91,10 +91,10 @@ const RegisterNewUser = () => {
           </div>
           <div className="md:w-2/3">
             <input
-              onChange={(e) =>
+              onChange={(event) =>
                 setNewUser({
                   ...newUser,
-                  email: e.target.value,
+                  email: event.currentTarget.value,
                 })
               }
               value={newUser.email}
@@ -111,10 +111,10 @@ const RegisterNewUser = () => {
           </div>
           <div className="md:w-2/3">
             <input
-              onChange={(e) =>
+              onChange={(event) =>
                 setNewUser({
                   ...newUser,
-                  password: e.target.value,
+                  password: event.currentTarget.value,
                 })
               }
               value={newUser.password}
