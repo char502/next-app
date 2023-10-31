@@ -25,36 +25,32 @@ export async function PUT(
 
   const hashedPasswordFromDB = user.hashedPassword;
 
-  const passwordCompare = bcrypt.compare(
+  const passwordsMatched = await bcrypt.compare(
     body.oldPassword,
-    hashedPasswordFromDB!,
-    async function (err, result) {
-      if (err)
-        return NextResponse.json({ error: err.message }, { status: 500 });
-      if (result) {
-        console.log('passwords match');
-
-        const newPasswordProvidedAndHashed = await bcrypt.hash(
-          body.newPassword,
-          10
-        );
-
-        const updateUserPassword = await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            email: body.email,
-            hashedPassword: newPasswordProvidedAndHashed,
-          },
-        });
-
-        return NextResponse.json(updateUserPassword, { status: 200 });
-      } else {
-        console.log("passwords don't match");
-        return NextResponse.json(
-          { error: 'Passwords dont match' },
-          { status: 404 }
-        );
-      }
-    }
+    hashedPasswordFromDB!
   );
+
+  if (!passwordsMatched) {
+    return NextResponse.json(
+      { error: 'Passwords dont match' },
+      { status: 400 }
+    );
+  }
+
+  if (passwordsMatched) {
+    const newPasswordProvidedAndHashed = await bcrypt.hash(
+      body.newPassword,
+      10
+    );
+
+    const updateUserPassword = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        email: body.email,
+        hashedPassword: newPasswordProvidedAndHashed,
+      },
+    });
+
+    return NextResponse.json(updateUserPassword, { status: 200 });
+  }
 }

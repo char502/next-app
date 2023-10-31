@@ -81,8 +81,20 @@ const ResetPassword = () => {
       body: JSON.stringify(passwordResetObj),
     });
 
-    if (res.status === 200) alert('password successfully changed');
+    if (res.status === 404) alert('User not found');
     setIsLoading(false);
+
+    if (res.status === 400) alert('invalid old password');
+
+    if (res.status === 200) {
+      alert('password successfully changed');
+      setPasswordResetObj({
+        email: '',
+        oldPassword: '',
+        newPassword: '',
+      });
+      setIsLoading(false);
+    }
   };
   return (
     <div>

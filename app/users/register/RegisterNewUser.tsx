@@ -52,17 +52,10 @@ const RegisterNewUser = () => {
     });
 
     if (res.status === 201)
-      //   setNewUser({
-      //     ...newUser,
-      //     name: '',
-      //     email: '',
-      //     password: '',
-      //   });
-      e.target.reset({
-        ...newUser,
-        name: null,
-        email: null,
-        password: null,
+      setNewUser({
+        name: 'null',
+        email: '',
+        password: '',
       });
     alert('user successfully added');
     setIsLoading(false);
@@ -108,7 +101,7 @@ const RegisterNewUser = () => {
               className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
               id="email"
               type="email"
-              placeholder="email"
+              placeholder="Email"
             />
           </div>
         </div>
@@ -149,17 +142,6 @@ const RegisterNewUser = () => {
       </form>
     </div>
   );
-  // const user = prisma.user.findUnique({
-  //   where: {
-  //     email,
-  //   },
-  // });
-
-  // if (!user) {
-  //   throw new Error('User not found');
-  // }
-
-  // const ResetPasswordToken = ;
 };
 
 export default RegisterNewUser;
